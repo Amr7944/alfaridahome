@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from sqlmodel import Session, select
 from pathlib import Path
-from .db import init_db, get_session
+from db import init_db, get_session
 from .models import Salesman, Customer, Product, Invoice, InvoiceItem, StockMovement
 from .schemas import LoginRequest, TokenResponse, CustomerCreate, InvoiceCreate, StockAdjustment
 from .security import verify_password, create_token, salesman_id_from_token
