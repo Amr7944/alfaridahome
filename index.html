@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة إدارة الفواتير</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f6f8;margin:0;color:#222}
+header{background:#17202a;color:white;padding:18px 24px;font-size:22px}
+main{padding:20px;max-width:1200px;margin:auto}
+.cards{display:flex;gap:12px;flex-wrap:wrap}.card{background:white;padding:18px;border-radius:12px;min-width:180px;box-shadow:0 2px 8px #0001}
+button{padding:10px 14px;border:0;border-radius:8px;cursor:pointer;background:#17202a;color:#fff}
+table{width:100%;border-collapse:collapse;background:white;margin-top:18px}
+th,td{padding:10px;border-bottom:1px solid #eee;text-align:right}
+input{padding:10px;border:1px solid #ddd;border-radius:8px}
+</style></head>
+<body>
+<header>لوحة إدارة الفواتير</header>
+<main>
+<div class="cards">
+<div class="card"><b>الفواتير</b><div id="invoiceCount">-</div></div>
+<div class="card"><b>إجمالي الفواتير</b><div id="totalSales">-</div></div>
+</div>
+<br>
+<button onclick="loadInvoices()">تحديث الفواتير</button>
+<table><thead><tr><th>رقم الفاتورة</th><th>المندوب</th><th>العميل</th><th>الإجمالي</th><th>التاريخ</th><th>الحالة</th></tr></thead>
+<tbody id="rows"></tbody></table>
+</main>
+<script>
+async function loadInvoices(){
+ const r=await fetch('/admin/invoices'); const data=await r.json();
+ document.getElementById('invoiceCount').textContent=data.length;
+ document.getElementById('totalSales').textContent=data.reduce((a,x)=>a+Number(x.total||0),0).toFixed(2);
+ document.getElementById('rows').innerHTML=data.map(x=>`<tr>
+ <td>${x.invoice_no}</td><td>${x.salesman_id}</td><td>${x.customer_id}</td>
+ <td>${Number(x.total).toFixed(2)}</td><td>${new Date(x.created_at).toLocaleString('ar-EG')}</td><td>${x.status}</td>
+ </tr>`).join('');
+}
+loadInvoices();
+</script>
+</body></html>
